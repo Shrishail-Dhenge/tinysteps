@@ -16,8 +16,8 @@ class _ParentMainScreenState extends State<ParentMainScreen> {
   final List<Widget> _screens = [
     const ParentHomeScreen(),
     const _PlaceholderScreen(title: 'My Children', icon: Icons.face_rounded),
-    const _PlaceholderScreen(title: 'Attendance', icon: Icons.calendar_today_rounded),
-    const _PlaceholderScreen(title: 'Account', icon: Icons.manage_accounts_rounded),
+    const _PlaceholderScreen(title: 'Attendance', icon: Icons.assignment_rounded),
+    const _PlaceholderScreen(title: 'Account', icon: Icons.settings_rounded),
   ];
 
   @override
@@ -32,10 +32,10 @@ class _ParentMainScreenState extends State<ParentMainScreen> {
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
         items: const [
-          BottomNavBarItem(icon: Icons.home_filled, label: 'Home'),
+          BottomNavBarItem(icon: Icons.home_rounded, label: 'Home'),
           BottomNavBarItem(icon: Icons.face_rounded, label: 'Children'),
-          BottomNavBarItem(icon: Icons.calendar_today_rounded, label: 'Attendance'),
-          BottomNavBarItem(icon: Icons.manage_accounts_rounded, label: 'Account'),
+          BottomNavBarItem(icon: Icons.assignment_rounded, label: 'Attendance'),
+          BottomNavBarItem(icon: Icons.settings_rounded, label: 'Account'),
         ],
       ),
     );
@@ -52,7 +52,12 @@ class _PlaceholderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: Text(title, style: AppTextStyles.heading2)),
+      backgroundColor: AppColors.bgLight,
+      appBar: AppBar(
+        title: Text(title, style: AppTextStyles.heading2),
+        backgroundColor: AppColors.bgLight,
+        elevation: 0,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

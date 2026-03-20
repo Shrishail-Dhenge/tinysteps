@@ -29,24 +29,20 @@ class BottomNavBar extends StatelessWidget {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(
+      margin: EdgeInsets.only(
         left: AppSpacing.md,
         right: AppSpacing.md,
-        top: AppSpacing.md,
-        bottom: bottomPadding > 0 ? bottomPadding + AppSpacing.xs : AppSpacing.lg,
+        bottom: bottomPadding > 0 ? bottomPadding + AppSpacing.md : AppSpacing.lg,
       ),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E1E2C), // True Dark Navy background mimicking the mock
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(32),
-          topRight: Radius.circular(32),
-        ),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: AppSpacing.sm),
+      decoration: BoxDecoration(
+        color: AppColors.bgSurface,
+        borderRadius: BorderRadius.circular(999),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 16,
-            offset: Offset(0, -4),
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -63,10 +59,10 @@ class BottomNavBar extends StatelessWidget {
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeOut,
               padding: isSelected
-                  ? const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.sm)
-                  : const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                  ? const EdgeInsets.symmetric(horizontal: 20, vertical: 10)
+                  : const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFF4A1A1A) : Colors.transparent, // Dark red background when selected
+                color: isSelected ? AppColors.primaryLight : Colors.transparent,
                 borderRadius: BorderRadius.circular(999),
               ),
               child: Row(
@@ -74,7 +70,7 @@ class BottomNavBar extends StatelessWidget {
                 children: [
                   Icon(
                     item.icon,
-                    color: isSelected ? AppColors.primary : const Color(0xFF6A5A6A),
+                    color: isSelected ? AppColors.primary : AppColors.textMuted,
                     size: 24,
                   ),
                   if (isSelected) ...[
