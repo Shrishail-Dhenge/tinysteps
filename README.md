@@ -100,7 +100,7 @@
 
 3. **Configure environment variables**
    ```bash
-   cp .env.example .env
+   cp ..env.example ..env
    ```
    *Open `.env` and add your Supabase credentials:*
    ```env

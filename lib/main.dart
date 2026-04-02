@@ -24,9 +24,7 @@ Future<void> main() async {
     ),
   );
 
-  runApp(
-    const ProviderScope(child: TinyStepsApp()),
-  );
+  runApp(const ProviderScope(child: TinyStepsApp()));
 }
 
 class TinyStepsApp extends ConsumerWidget {
