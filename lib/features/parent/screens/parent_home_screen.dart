@@ -51,7 +51,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
             BottomNavBarItem(icon: Icons.home_rounded, label: 'Home'),
             BottomNavBarItem(icon: Icons.face_rounded, label: 'Children'),
             BottomNavBarItem(icon: Icons.assignment_rounded, label: 'Attendance'),
-            BottomNavBarItem(icon: Icons.settings_rounded, label: 'Account'),
+            BottomNavBarItem(icon: Icons.settings_rounded, label: 'Settings'),
           ],
         ),
       ),

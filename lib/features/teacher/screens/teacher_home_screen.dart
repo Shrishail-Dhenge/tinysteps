@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tinysteps/core/constants/app_theme.dart';
 import 'package:tinysteps/core/widgets/bottom_nav_bar.dart';
 import 'package:tinysteps/core/widgets/logout_dialog.dart';
+import 'package:tinysteps/features/teacher/screens/teacher_settings_screen.dart';
 
 /// Teacher Home Shell — wraps all teacher tab screens with shared BottomNavBar.
 /// Includes an approval gate: unapproved teachers see a pending screen.
@@ -32,6 +33,7 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
       const _TeacherDashboardTab(),
       const _TeacherAttendanceTab(),
       const _TeacherChildrenTab(),
+      const TeacherSettingsScreen(),
     ];
     _checkApproval();
   }
@@ -95,6 +97,7 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
             BottomNavBarItem(icon: Icons.home_rounded, label: 'Home'),
             BottomNavBarItem(icon: Icons.assignment_rounded, label: 'Attendance'),
             BottomNavBarItem(icon: Icons.face_rounded, label: 'Children'),
+            BottomNavBarItem(icon: Icons.settings_rounded, label: 'Settings'),
           ],
         ),
       ),

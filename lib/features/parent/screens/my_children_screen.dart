@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tinysteps/core/constants/app_theme.dart';
+import 'package:tinysteps/features/parent/widgets/child_card.dart';
 
 class MyChildrenScreen extends StatelessWidget {
   const MyChildrenScreen({super.key});
@@ -28,7 +29,7 @@ class MyChildrenScreen extends StatelessWidget {
               separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
               itemBuilder: (context, index) {
                 final child = _placeholderChildren[index];
-                return _ChildCard(
+                return ChildCard(
                   childId: child['id']!,
                   name: child['name']!,
                   dob: child['dob']!,
@@ -60,57 +61,3 @@ class MyChildrenScreen extends StatelessWidget {
   }
 }
 
-class _ChildCard extends StatelessWidget {
-  final String childId;
-  final String name;
-  final String dob;
-  final String classroom;
-
-  const _ChildCard({
-    required this.childId,
-    required this.name,
-    required this.dob,
-    required this.classroom,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => context.push('/parent/children/$childId?name=${Uri.encodeComponent(name)}'),
-      borderRadius: BorderRadius.circular(AppRadius.xl),
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.bgSurface,
-          borderRadius: BorderRadius.circular(AppRadius.xl),
-          boxShadow: AppShadows.card,
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 26,
-              backgroundColor: AppColors.primary.withValues(alpha: 0.15),
-              child: Text(
-                name[0].toUpperCase(),
-                style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(name, style: AppTextStyles.labelBold),
-                  const SizedBox(height: 2),
-                  Text('DOB: $dob', style: AppTextStyles.bodyMuted),
-                  Text(classroom, style: AppTextStyles.bodySmall),
-                ],
-              ),
-            ),
-            const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.textMuted),
-          ],
-        ),
-      ),
-    );
-  }
-}
