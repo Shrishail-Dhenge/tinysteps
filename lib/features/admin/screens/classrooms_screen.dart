@@ -510,6 +510,7 @@ class _ReferralCodesSheetState extends State<_ReferralCodesSheet> {
 }
 
 // ==================== CLASSROOM DETAIL SCREEN ====================
+// ==================== CLASSROOM DETAIL SCREEN ====================
 class ClassroomDetailScreen extends StatefulWidget {
   final Map<String, dynamic> classroom;
   const ClassroomDetailScreen({super.key, required this.classroom});
@@ -539,15 +540,15 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
           .select('*, teachers!classrooms_teacher_id_fkey(id, full_name)')
           .eq('id', _currentClassroom['id'])
           .single();
-          
+
       final children = await _supabase.from('children')
           .select('*')
           .eq('classroom_id', _currentClassroom['id']);
-          
+
       final unassigned = await _supabase.from('children')
           .select('*')
           .isFilter('classroom_id', null);
-          
+
       if (mounted) {
         setState(() {
           _currentClassroom = updated;
@@ -595,7 +596,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Classroom deleted'), backgroundColor: AppColors.danger),
         );
-        Navigator.pop(context); // Go back to the list
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
@@ -609,26 +610,57 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final teacherName = _currentClassroom['teachers']?['full_name'] ?? 'Unassigned';
+
     return Scaffold(
+      // Background color same as the image (light/off-white background)
+      backgroundColor: AppColors.bgLight,   // ← Color mentioned here (Scaffold background)
+
       appBar: AppBar(
-        title: Text(_currentClassroom['name'] ?? 'Detail'),
+        title: Text(
+          _currentClassroom['name'] ?? 'Detail',
+          style: const TextStyle(
+            color: Colors.black,           // ← Color mentioned here (AppBar title text color - Black)
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
+        ),
+        // AppBar background color to match the light theme
+        backgroundColor: AppColors.bgLight,   // ← Color mentioned here (AppBar background)
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
         actions: [
-          IconButton(icon: const Icon(Icons.edit), onPressed: () async {
-            final res = await showDialog<bool>(context: context, builder: (_) => _UpsertClassroomDialog(existing: _currentClassroom));
-            if (res == true) _refresh(silent: true);
-          }),
           IconButton(
-            icon: const Icon(Icons.delete, color: AppColors.danger),
+            icon: const Icon(Icons.edit),
+            onPressed: () async {
+              final res = await showDialog<bool>(
+                context: context,
+                builder: (_) => _UpsertClassroomDialog(existing: _currentClassroom),
+              );
+              if (res == true) _refresh(silent: true);
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            color: AppColors.danger,   // ← Color mentioned here (Delete icon color)
             onPressed: _deleteClassroom,
           ),
         ],
       ),
-      body: _isLoading ? const Center(child: CircularProgressIndicator()) : SingleChildScrollView(
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Info Card with white background and subtle border
             Card(
+              color: AppColors.white,                    // ← Color mentioned here (Info Card background)
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                side: BorderSide(color: AppColors.border), // ← Color mentioned here (Card border color)
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 child: Column(
@@ -642,12 +674,21 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
                 ),
               ),
             ),
+
             const SizedBox(height: AppSpacing.lg),
-            Text('Children (${_children.length})', style: AppTextStyles.heading3),
+
+            Text(
+              'Children (${_children.length})',
+              style: AppTextStyles.heading3,
+            ),
             ..._children.map((c) => _childRow(c, isAssigned: true)),
+
             if (_unassigned.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.lg),
-              Text('Unassigned (${_unassigned.length})', style: AppTextStyles.heading3),
+              Text(
+                'Unassigned (${_unassigned.length})',
+                style: AppTextStyles.heading3,
+              ),
               ..._unassigned.map((c) => _childRow(c, isAssigned: false)),
             ],
           ],
@@ -656,19 +697,60 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
     );
   }
 
-  Widget _info(String l, String v) => Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(l, style: AppTextStyles.bodyMuted), Text(v, style: AppTextStyles.labelBold)]));
+  Widget _info(String label, String value) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: AppTextStyles.bodyMuted),
+        Text(value, style: AppTextStyles.labelBold),
+      ],
+    ),
+  );
 
   Widget _childRow(dynamic c, {required bool isAssigned}) => ListTile(
-    title: Text(c['full_name'] ?? 'Unknown'),
-    leading: const CircleAvatar(child: Icon(Icons.child_care, size: 18)),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+    title: Text(
+      c['full_name'] ?? 'Unknown',
+      style: const TextStyle(
+        color: Colors.black,           // ← Color mentioned here (Assigned & Unassigned child name color - Black)
+        fontWeight: FontWeight.w500,
+        fontSize: 16,
+      ),
+    ),
+    leading: CircleAvatar(
+      backgroundColor: AppColors.secondaryLight,   // ← Color mentioned here (Child avatar background - pinkish)
+      radius: 20,
+      child: const Icon(Icons.child_care, size: 18, color: AppColors.secondary), // ← Color mentioned here (Child icon color)
+    ),
     trailing: isAssigned
-      ? IconButton(icon: const Icon(Icons.remove_circle_outline, color: AppColors.danger), onPressed: () async {
-          await _supabase.from('children').update({'classroom_id': null, 'teacher_id': null}).eq('id', c['id']);
-          _refresh(silent: true);
-        })
-      : FilledButton(onPressed: () async {
-          await _supabase.from('children').update({'classroom_id': _currentClassroom['id'], 'teacher_id': _currentClassroom['teacher_id']}).eq('id', c['id']);
-          _refresh(silent: true);
-        }, child: const Text('Assign')),
+        ? IconButton(
+      icon: const Icon(Icons.remove_circle_outline),
+      color: AppColors.danger,   // ← Color mentioned here (Remove button icon color)
+      onPressed: () async {
+        await _supabase.from('children').update({
+          'classroom_id': null,
+          'teacher_id': null
+        }).eq('id', c['id']);
+        _refresh(silent: true);
+      },
+    )
+        : FilledButton(
+      style: FilledButton.styleFrom(
+        backgroundColor: const Color(0xFFFC4C6C), // Pink color similar to image
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      onPressed: () async {
+        await _supabase.from('children').update({
+          'classroom_id': _currentClassroom['id'],
+          'teacher_id': _currentClassroom['teacher_id'],
+        }).eq('id', c['id']);
+        _refresh(silent: true);
+      },
+      child: const Text('Assign'),
+    ),
   );
 }
