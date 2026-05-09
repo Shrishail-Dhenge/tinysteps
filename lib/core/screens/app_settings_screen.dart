@@ -137,6 +137,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                     DropdownButton<String>(
                       value: _language,
                       underline: const SizedBox(),
+                      dropdownColor: AppColors.bgLight,
                       icon: const Icon(Icons.arrow_drop_down_rounded,
                           color: AppColors.textMuted),
                       style: AppTextStyles.bodyMedium,

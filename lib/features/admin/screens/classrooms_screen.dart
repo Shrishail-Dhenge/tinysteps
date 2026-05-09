@@ -101,11 +101,15 @@ class _ClassroomsScreenState extends State<ClassroomsScreen> {
     return Scaffold(
       backgroundColor: AppColors.bgLight,
       appBar: AppBar(
-        title: Text('Classrooms', style: AppTextStyles.heading2),
+        backgroundColor: AppColors.bgLight,
+        title: Text('Classrooms', style: AppTextStyles.heading2.copyWith(
+          color: AppColors.black),
+        ),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: const Icon(Icons.confirmation_number_outlined),
+            color: AppColors.black,
             tooltip: 'Referral Codes',
             onPressed: _showReferralSheet,
           ),
@@ -610,10 +614,18 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   Widget build(BuildContext context) {
     final teacherName = _currentClassroom['teachers']?['full_name'] ?? 'Unassigned';
     return Scaffold(
+      backgroundColor: AppColors.bgLight,
       appBar: AppBar(
-        title: Text(_currentClassroom['name'] ?? 'Detail'),
+        title: Text(
+          'Classrooms',
+          style: AppTextStyles.heading2.copyWith(
+            color: Colors.black,           // ← Requested: AppBar title color = Black
+          ),
+        ),
+        backgroundColor: AppColors.bgLight,
         actions: [
-          IconButton(icon: const Icon(Icons.edit), onPressed: () async {
+          IconButton(icon: const Icon(Icons.edit),color:AppColors.black ,
+              onPressed: () async {
             final res = await showDialog<bool>(context: context, builder: (_) => _UpsertClassroomDialog(existing: _currentClassroom));
             if (res == true) _refresh(silent: true);
           }),
@@ -629,6 +641,12 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
+              color: AppColors.white,                    // ← Card background
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                side: BorderSide(color: AppColors.border),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 child: Column(
@@ -659,7 +677,13 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   Widget _info(String l, String v) => Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(l, style: AppTextStyles.bodyMuted), Text(v, style: AppTextStyles.labelBold)]));
 
   Widget _childRow(dynamic c, {required bool isAssigned}) => ListTile(
-    title: Text(c['full_name'] ?? 'Unknown'),
+    title: Text(
+      c['full_name'] ?? 'Unknown',
+      style: const TextStyle(
+        color: Colors.black,               // ← Child names in black as requested
+        fontWeight: FontWeight.w600,
+      ),
+    ),
     leading: const CircleAvatar(child: Icon(Icons.child_care, size: 18)),
     trailing: isAssigned
       ? IconButton(icon: const Icon(Icons.remove_circle_outline, color: AppColors.danger), onPressed: () async {

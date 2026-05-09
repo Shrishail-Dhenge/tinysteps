@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:tinysteps/features/auth/screens/login_screen.dart';
 import 'package:tinysteps/features/auth/screens/register_screen.dart';
+import 'package:tinysteps/features/auth/screens/forgot_pass_screen.dart';
 import 'package:tinysteps/features/parent/screens/parent_home_screen.dart';
 import 'package:tinysteps/features/parent/screens/my_children_screen.dart';
 import 'package:tinysteps/features/parent/screens/add_child_screen.dart';
@@ -59,11 +60,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final session = Supabase.instance.client.auth.currentSession;
       final isLoggedIn = session != null;
       final loc = state.matchedLocation;
-      final isOnAuth = loc == '/login' || loc == '/register';
+      
+      // Routes that don't require login
+      final isOnAuth = loc == '/login' || loc == '/register' || loc == '/forgot-password';
 
       if (!isLoggedIn && !isOnAuth) return '/login';
 
       if (isLoggedIn && isOnAuth) {
+        // IMPORTANT: If we are on /forgot-password, we might have a session 
+        // because of the recovery link. We MUST stay here to complete the reset.
+        if (loc == '/forgot-password') return null;
+
         final role = session.user.userMetadata?['role'] as String?;
         return _routeForRole(role);
       }
@@ -73,6 +80,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/login', builder: (c, s) => const LoginScreen()),
       GoRoute(path: '/register', builder: (c, s) => const RegisterScreen()),
+      GoRoute(path: '/forgot-password', builder: (c, s) => const ForgotPassScreen()),
 
       // ── Parent ──────────────────────────────────────────────────────────────
       GoRoute(path: '/parent', builder: (c, s) => const ParentHomeScreen()),
@@ -104,7 +112,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/about', builder: (c, s) => const AboutAppScreen()),
 
-      // ✅ ADDED THIS 👇
       GoRoute(
         path: '/privacy-policy',
         builder: (c, s) => const PrivacyPolicyScreen(),

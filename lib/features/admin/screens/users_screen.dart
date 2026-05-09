@@ -383,6 +383,7 @@ class _UsersScreenState extends State<UsersScreen>
                   DropdownButtonFormField<String>(
                     hint: Text('Select classroom', style: AppTextStyles.bodyMuted),
                     initialValue: selectedClassroomId,
+                    dropdownColor: AppColors.bgLight, // ← Assign classroom dropdown color is bgLight
                     items: classrooms.map((c) {
                       // FIX: code is nullable — fallback to name only
                       final code = c['code'] as String?;

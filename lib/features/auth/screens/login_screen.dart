@@ -426,11 +426,7 @@ class _LoginScreenState extends State<LoginScreen>
                                                     color:
                                                         cs.onSurface)),
                                     GestureDetector(
-                                      onTap: () {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Password reset coming soon!')),
-                                        );
-                                      },
+                                      onTap: () => context.push('/forgot-password'),
                                       child: Text('Forgot?',
                                           style: AppTextStyles
                                               .labelMedium
